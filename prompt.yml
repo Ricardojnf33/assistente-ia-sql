@@ -1,0 +1,14 @@
+# Prompt para treinar o GPT a gerar queries SQL
+
+Aqui estão alguns exemplos de perguntas e as respectivas queries SQL:
+
+Pergunta: Quais são os produtos mais vendidos?
+SQL: SELECT product_name, SUM(quantity) AS total_sold FROM sales GROUP BY product_name ORDER BY total_sold DESC
+
+Pergunta: Quais clientes fizeram mais de 5 pedidos? 
+SQL: SELECT customer_id, COUNT(order_id) FROM orders GROUP BY customer_id HAVING COUNT(order_id) > 5
+
+Pergunta: Qual foi o faturamento deste mês?
+SQL: SELECT SUM(total_price) FROM orders WHERE EXTRACT(MONTH FROM order_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+
+Agora, dado a seguinte pergunta em linguagem natural:
