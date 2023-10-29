@@ -1,34 +1,28 @@
 import os
-import psycopg2
-import psycopg2.extras
-import pandas as pd
-from dotenv import load_dotenv
+from astra_db.rest import AstraDB
+from dotenv import load_dotenv  
 
-load_dotenv() 
+load_dotenv()
 
-# Carrega credenciais do PostgreSQL
-DB_HOST = os.getenv("DB_HOST")
-DB_NAME = os.getenv("DB_NAME")  
-DB_USER = os.getenv("DB_USER")
-DB_PASS = os.getenv("DB_PASS")
+# Credenciais AstraDB
+ASTRA_DB_ID = os.getenv("ASTRA_DB_ID")
+ASTRA_DB_REGION = os.getenv("ASTRA_DB_REGION") 
+ASTRA_DB_KEYSPACE = "shopping_db"
+ASTRA_DB_APPLICATION_TOKEN = os.getenv("ASTRA_DB_APPLICATION_TOKEN")
 
-
-def connect_to_postgres():
-  """
-  Conecta ao banco de dados PostgreSQL
-  """
+def connect_astra():
 
   try:
-    conn = psycopg2.connect(
-      host=DB_HOST,
-      database=DB_NAME,
-      user=DB_USER,
-      password=DB_PASS  
-    )
-    return conn
+    # Cria cliente AstraDB 
+    astra_client = AstraDB(ASTRA_DB_ID, ASTRA_DB_REGION, ASTRA_DB_APPLICATION_TOKEN)
+
+    # Faz conexão com o banco
+    db = astra_client.connect(ASTRA_DB_KEYSPACE)
+    
+    return db
 
   except Exception as e:
-    print(f"Erro ao conectar no PostgreSQL: {e}")
+    print(f"Erro ao conectar ao Astra DB: {e}")
     return None
 
 
@@ -40,32 +34,34 @@ def close_connection(conn):
   try:
     conn.close()
     print("Conexão fechada com sucesso!")
-  except Exception as e:
+except Exception as e:
     print(f"Erro ao fechar conexão: {e}")
 
 
 def execute_query(conn, query):
   """
-  Executa uma query SQL no banco
+  Executa uma query no Astra DB
   """
 
-  cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
-  cur.execute(query)
+  try:
+    cur = conn.cursor()
+    cur.execute(query)  
+    rows = cur.fetchall()
+    return rows
 
-  rows = cur.fetchall()
-  conn.commit()
-
-  return rows
+  except Exception as e:
+    print(f"Erro ao executar query: {e}")
+    return None 
 
 
 def get_df_from_sql(conn, query):
   """
-  Executa uma query SQL e retorna um DataFrame
+  Retorna um DataFrame da query
   """
 
   try:
     return pd.read_sql(query, conn)
   
-  except Exception as e:
+  except Exception as e: 
     print(f"Erro ao executar query: {e}")
     return None
