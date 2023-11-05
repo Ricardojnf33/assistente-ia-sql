@@ -1,67 +1,53 @@
-import os
-from astra_db.rest import AstraDB
-from dotenv import load_dotenv  
+import snowflake.connector
+import pandas as pd
 
-load_dotenv()
+def execute_sf_query(p_sql):
+    # Parâmetros de conexão Snowflake
+    connection_params = {
+        'user': SF_USER,
+        'password': SF_PASSWORD,
+        'account': SF_ACCOUNT,
+        'warehouse': SF_WAREHOUSE,
+        'database': SF_DATABASE,
+        'schema': SF_SCHEMA,
+        'role': SF_ROLE
+    }
 
-# Credenciais AstraDB
-ASTRA_DB_ID = os.getenv("ASTRA_DB_ID")
-ASTRA_DB_REGION = os.getenv("ASTRA_DB_REGION") 
-ASTRA_DB_KEYSPACE = "shopping_db"
-ASTRA_DB_APPLICATION_TOKEN = os.getenv("ASTRA_DB_APPLICATION_TOKEN")
+    query = p_sql
+    conn = None
+    cur = None
 
-def connect_astra():
+    try:
+        # Estabelecer uma conexão com Snowflake
+        conn = snowflake.connector.connect(**connection_params)
 
-  try:
-    # Cria cliente AstraDB 
-    astra_client = AstraDB(ASTRA_DB_ID, ASTRA_DB_REGION, ASTRA_DB_APPLICATION_TOKEN)
+        # Criar um objeto cursor
+        cur = conn.cursor()
 
-    # Faz conexão com o banco
-    db = astra_client.connect(ASTRA_DB_KEYSPACE)
+        # Executar a consulta
+        cur.execute(query)
+        
+        # Buscar todos os resultados
+        query_results = cur.fetchall()
+
+        # Obter nomes de colunas da descrição do cursor
+        column_names = [col[0] for col in cur.description]
+        
+        # Criar um DataFrame Pandas
+        data_frame = pd.DataFrame(query_results, columns=column_names)
+        return data_frame
     
-    return db
+    except snowflake.connector.errors.DatabaseError as de:
+        print("Erro no Banco de Dados Snowflake:", de)
+        return {"error": "Erro no Banco de Dados Snowflake", "details": str(de)}
 
-  except Exception as e:
-    print(f"Erro ao conectar ao Astra DB: {e}")
-    return None
+    except Exception as e:
+        print("Ocorreu um erro:", e)
+        return {"error": "Ocorreu um erro", "details": str(e)}
 
-
-def close_connection(conn):
-  """
-  Fecha a conexão com o PostgreSQL
-  """
-
-  try:
-    conn.close()
-    print("Conexão fechada com sucesso!")
-except Exception as e:
-    print(f"Erro ao fechar conexão: {e}")
-
-
-def execute_query(conn, query):
-  """
-  Executa uma query no Astra DB
-  """
-
-  try:
-    cur = conn.cursor()
-    cur.execute(query)  
-    rows = cur.fetchall()
-    return rows
-
-  except Exception as e:
-    print(f"Erro ao executar query: {e}")
-    return None 
-
-
-def get_df_from_sql(conn, query):
-  """
-  Retorna um DataFrame da query
-  """
-
-  try:
-    return pd.read_sql(query, conn)
-  
-  except Exception as e: 
-    print(f"Erro ao executar query: {e}")
-    return None
+    finally:
+        # Fechar o cursor e conexão
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
