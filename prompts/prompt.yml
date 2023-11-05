@@ -1,14 +1,41 @@
-# Prompt para treinar o GPT a gerar queries SQL
+_type: prompt
+input_variables:
+    ["input"]
+template: >
+  Dado abaixo abaixo estão as estruturas de tabelas no esquema ESQUEMA_PRINCIPAL do banco de dados SHOPPING_DB no Snowflake Cloud Database:
 
-Aqui estão alguns exemplos de perguntas e as respectivas queries SQL:
+      TBL_LOJAS (
+          ID NUMBER(38,0),
+          NOME VARCHAR(255),
+          CATEGORIAS VARCHAR(255),
+          PRIMARY KEY (ID)
+      );
 
-Pergunta: Quais são os produtos mais vendidos?
-SQL: SELECT product_name, SUM(quantity) AS total_sold FROM sales GROUP BY product_name ORDER BY total_sold DESC
+      TBL_PRODUTOS (
+          ID NUMBER(38,0) NOT NULL,
+          NOME VARCHAR(255),
+          DESCRICAO VARCHAR(255),
+          PRECO NUMBER(12,2),
+          LOJA_ID NUMBER(38,0),
+          CATEGORIAS VARCHAR(255),
+          COR VARCHAR(255),
+          PRIMARY KEY (ID),
+          FOREIGN KEY (LOJA_ID) REFERENCES SHOPPING_DB.ESQUEMA_PRINCIPAL.TBL_LOJAS(ID)
+      );
 
-Pergunta: Quais clientes fizeram mais de 5 pedidos? 
-SQL: SELECT customer_id, COUNT(order_id) FROM orders GROUP BY customer_id HAVING COUNT(order_id) > 5
+              Responda às perguntas do usuário e retorne com a consulta SQL.
+          exemplo:
+          pergunta do usuário: Qual é o preço médio dos produtos na categoria 'Moda Feminina'?
+          sua consulta SQL gerada: SELECT AVG(PRECO) FROM SHOPPING_DB.ESQUEMA_PRINCIPAL.TBL_PRODUTOS WHERE CATEGORIAS = 'Moda Feminina';
 
-Pergunta: Qual foi o faturamento deste mês?
-SQL: SELECT SUM(total_price) FROM orders WHERE EXTRACT(MONTH FROM order_date) = EXTRACT(MONTH FROM CURRENT_DATE)
+          pergunta do usuário: Quais são as lojas que possuem mais de 20 produtos?
+          sua consulta SQL gerada: SELECT l.NOME, COUNT(p.ID) as QUANTIDADE_PRODUTOS 
+                                    FROM SHOPPING_DB.ESQUEMA_PRINCIPAL.TBL_LOJAS l
+                                    JOIN SHOPPING_DB.ESQUEMA_PRINCIPAL.TBL_PRODUTOS p ON l.ID = p.LOJA_ID
+                                    GROUP BY l.NOME
+                                    HAVING COUNT(p.ID) > 20;
 
-Agora, dado a seguinte pergunta em linguagem natural:
+          pergunta do usuário: {input}
+          sua consulta SQL gerada: '''
+
+          
