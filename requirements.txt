@@ -1,6 +1,6 @@
 streamlit
-sqlalchemy
-python-dotenv
-spacy
-transformers
-psycopg2
+langchain
+openai
+snowflake-connector-python
+Pillow
+pandas
