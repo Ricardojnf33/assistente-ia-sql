@@ -1,29 +1,62 @@
+# pip install langchain streamlit openai snowflake-connector-python
+
+#PIL
+from langchain.llms import OpenAI
+from langchain.chains import LLMChain
+
+import os
+from pathlib import Path
+from PIL import Image
 import streamlit as st
-from sql_exec import execute_query
-from prompts.prompt import load_prompt
-import openai
+from langchain.prompts import load_prompt
+from sql_execution import execute_sf_query
 
-# Layout do app
-st.title("Assistente de SQL por Voz")
-st.write("Faça uma pergunta em linguagem natural sobre o banco de dados:")
+# Configurar a chave da API OpenAI
+# os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
 
-# Entrada de pergunta do usuário
-question = st.text_input("Sua pergunta:")
+def get_root_path():
+    """
+    Obtém o caminho raiz do projeto 'ai_sql_shop_assistent'.
+    
+    Retorna:
+    - pathlib.Path: caminho raiz ou None se não for encontrado.
+    """
+    paths = [p for p in Path(__file__).parents if p.parts[-1] == "ai_sql_shop_assistent"]
+    return paths[0] if paths else None
 
-if question:
+root_path = get_root_path()
+if not root_path:
+    st.error("Diretório 'ai_sql_shop_assistent' não encontrado!")
+    raise SystemExit
 
-  # Carrega prompt GPT
-  prompt = load_prompt()  
+# Interface de usuário
+st.title("Assistente de SQL IA")
+user_input = st.text_input("Escreva sua pergunta aqui")
+tab_titles = ["Resultado", "Query", "Diagrama ERD"]
+tabs = st.tabs(tab_titles)
 
-  # Gera query SQL com GPT
-  openai.api_key = os.getenv("OPENAI_API_KEY")
-  gpt = openai.Completion.create(engine="text-davinci-002", prompt=prompt + question)
-  sql_query = gpt.choices[0].text
-  
-  # Executa query no banco
-  result = execute_query(sql_query)
+# Carregar e exibir o diagrama ERD
+erd_image_path = root_path / "images" / "ERD.png"
+if erd_image_path.exists():
+    erd_image = Image.open(erd_image_path)
+    with tabs[2]:
+        st.image(erd_image)
+else:
+    st.warning("Imagem ERD não encontrada!")
 
-  # Exibe resultado
-  st.write("Resultado:", result)
+# Configurar e usar a cadeia de geração de SQL
+prompt_path = root_path / "prompts" / "prompt_template.yaml"
+if prompt_path.exists():
+    prompt_template = load_prompt(prompt_path)
+    llm = OpenAI(temperature=0)
+    sql_generation_chain = LLMChain(llm=llm, prompt=prompt_template, verbose=True)
 
-  st.code(sql_query)
+    if user_input:
+        sql_query = sql_generation_chain(user_input)
+        result = execute_sf_query(sql_query['text'])
+        with tabs[0]:
+            st.write(result)
+        with tabs[1]:
+            st.write(sql_query['text'])
+else:
+    st.error("Arquivo de prompt não encontrado!")
