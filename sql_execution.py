@@ -1,5 +1,10 @@
 import snowflake.connector
 import pandas as pd
+from app_secrets import *
+import logging
+
+# Configure o logging para o nível DEBUG
+logging.basicConfig(level=logging.DEBUG)
 
 def execute_sf_query(p_sql):
     # Parâmetros de conexão Snowflake
@@ -11,11 +16,14 @@ def execute_sf_query(p_sql):
         'database': SF_DATABASE,
         'schema': SF_SCHEMA,
         'role': SF_ROLE
+        
     }
 
     query = p_sql
-    conn = None
+    
+    # Inicializando as variáveis
     cur = None
+    conn = None
 
     try:
         # Estabelecer uma conexão com Snowflake
@@ -26,7 +34,7 @@ def execute_sf_query(p_sql):
 
         # Executar a consulta
         cur.execute(query)
-        
+
         # Buscar todos os resultados
         query_results = cur.fetchall()
 
@@ -35,7 +43,12 @@ def execute_sf_query(p_sql):
         
         # Criar um DataFrame Pandas
         data_frame = pd.DataFrame(query_results, columns=column_names)
+        
         return data_frame
+    
+    except snowflake.connector.errors.ProgrammingError as pe:
+        print("Query Compilation Error:", pe)
+        return("Query compilation error")
     
     except snowflake.connector.errors.DatabaseError as de:
         print("Erro no Banco de Dados Snowflake:", de)
@@ -51,3 +64,4 @@ def execute_sf_query(p_sql):
             cur.close()
         if conn:
             conn.close()
+

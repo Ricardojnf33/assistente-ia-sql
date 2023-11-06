@@ -1,27 +1,12 @@
-# pip install langchain streamlit openai snowflake-connector-python
-
-#PIL
-from langchain.llms import OpenAI
-from langchain.chains import LLMChain
-
-import os
-from pathlib import Path
-from PIL import Image
-import streamlit as st
-from langchain.prompts import load_prompt
-from sql_execution import execute_sf_query
-
-# Configurar a chave da API OpenAI
-# os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-
+'''
 def get_root_path():
     """
-    Obtém o caminho raiz do projeto 'ai_sql_shop_assistent'.
+    Obtém o caminho raiz do projeto 'assistente-ia-sql'.
     
     Retorna:
     - pathlib.Path: caminho raiz ou None se não for encontrado.
     """
-    paths = [p for p in Path(__file__).parents if p.parts[-1] == "ai_sql_shop_assistent"]
+    paths = [p for p in Path(__file__).parents if p.parts[-1] == "assistente-ia-sql"]
     return paths[0] if paths else None
 
 root_path = get_root_path()
@@ -60,3 +45,4 @@ if prompt_path.exists():
             st.write(sql_query['text'])
 else:
     st.error("Arquivo de prompt não encontrado!")
+'''
