@@ -10,6 +10,7 @@ O fluxo do assistente é:
 4. A consulta SQL é executada no Snowflake usando a biblioteca Python snowflake-connector
 5. O resultado da consulta é exibido na interface para o usuário
 
+![Exemplo](https://github.com/<seu_usuario>/<seu_repo>/blob/main/images/Exemplo.png.png?raw=true)
 
 A interface foi construída com Streamlit e o aplicativo roda localmente.
 
@@ -54,4 +55,4 @@ Pergunta:
 
 Quais o total de lojas do shopping?
 
-
+![Exemplo Query](https://github.com/<seu_usuario>/<seu_repo>/blob/main/images/Exemplo_query.png.png?raw=true)
