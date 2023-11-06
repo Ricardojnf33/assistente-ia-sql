@@ -1,31 +1,57 @@
-# ai_sql_shop_assistent
-Um bot assistente que realiza uma query a uma Base de Dados vectorizadas
+# Assistente SQL com IA
+Este projeto consiste em um assistente de SQL com IA para consultas em banco de dados Snowflake. O assistente recebe uma pergunta em linguagem natural do usuário e gera a consulta SQL correspondente.
 
-projeto_sql_ia/
-├── streamlit_app.py # arquivo principal da aplicação Streamlit
-├── requerimentos.txt # bibliotecas requeridas
-├── prompts/ 
-|   └── prompt.yml # arquivo com o prompt GPT
-├── imagens/
-|   └── erd.png # imagem do diagrama ERD
-├── sql_exec.py # função para executar query no banco
-├── app_secrets.py # arquivo com chaves de API
+## Funcionamento
+O fluxo do assistente é:
 
-O arquivo streamlit_app.py contém o código principal da aplicação, incluindo:
+1. O usuário insere uma pergunta em linguagem natural na interface
+2. A pergunta é passada para a cadeia de geração de linguagem LangChain
+3. LangChain usa o modelo de linguagem GPT-3 da Anthropic para gerar a query SQL correspondente
+4. A consulta SQL é executada no Snowflake usando a biblioteca Python snowflake-connector
+5. O resultado da consulta é exibido na interface para o usuário
 
-Importação de bibliotecas
-Layout do app Streamlit
-Carregamento do prompt GPT
-Integração com GPT e banco de dados
-Exibição dos resultados
-O arquivo prompt.yml contém o prompt/template usado para treinar o modelo GPT.
 
-O arquivo sql_exec.py contém a função para se conectar ao banco Snowflake e executar as queries SQL geradas pelo GPT.
+A interface foi construída com Streamlit e o aplicativo roda localmente.
 
-O arquivo app_secrets.py contém tokens e chaves que não devem ser versionados, como a chave de API do OpenAI.
+**Tecnologias**
 
-A pasta imagens contém os assets usados no app, como o diagrama ERD.
+As principais tecnologias usadas no projeto:
 
-E a pasta prompts agrupa diferentes versões dos prompts usados para treinar o GPT.
+* LangChain para geração de linguagem
+* GPT-3 da Anthropic como LLM
+* Snowflake para banco de dados em nuvem
+* Streamlit para interface web
 
-Assim fica mais organizado e with descrição do papel de cada arquivo/pasta no projeto. 
+**Estrutura de Arquivos** 
+
+* images/: contém diagrama ERD
+* prompts/: contém o template de prompt usado no LangChain
+* pycache/: cache Python
+* README.md: este arquivo
+* demo.py: script principal com interface Streamlit
+* requirements.txt: dependencies do projeto
+* sql_execution.py: funções para executar queries SQL no Snowflake
+
+**Como Usar**
+
+Pré-requisitos
+
+* Python 3.7+
+* Conta na OpenAI
+* Conta Snowflake
+
+**Passos**
+
+1. Clone este repositório
+2. Instale as dependências com pip install -r requirements.txt
+3. Configure as credenciais Snowflake e chave API Anthropic em app_secrets.py
+4. Execute streamlit run demo.py
+5. Insira uma pergunta na caixa de texto e clique Enter
+
+Exemplo
+
+Pergunta:
+
+Quais o total de lojas do shopping?
+
+
