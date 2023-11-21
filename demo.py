@@ -12,8 +12,8 @@ import streamlit as st
 from langchain.llms import OpenAI
 from langchain.chains import LLMChain
 
-from dotenv import load_dotenv
-load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
+#from dotenv import load_dotenv
+#load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
 
 
 # Configurar a chave da API OpenAI a partir de variáveis de ambiente
