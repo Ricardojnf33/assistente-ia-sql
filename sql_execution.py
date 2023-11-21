@@ -3,8 +3,8 @@ import snowflake.connector
 import pandas as pd
 import logging
 
-from dotenv import load_dotenv
-load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
+#from dotenv import load_dotenv
+#load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
 
 # Configure o logging para o nível DEBUG
 logging.basicConfig(level=logging.DEBUG)
