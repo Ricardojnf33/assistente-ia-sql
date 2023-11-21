@@ -45,7 +45,7 @@ Pré-requisitos
 
 1. Clone este repositório
 2. Instale as dependências com pip install -r requirements.txt
-3. Configure as credenciais Snowflake e chave API Anthropic em app_secrets.py
+3. Configure as credenciais Snowflake e chave API OpenAI em app_secrets.py
 4. Execute streamlit run demo.py
 5. Insira uma pergunta na caixa de texto e clique Enter
 
@@ -53,6 +53,6 @@ Exemplo
 
 Pergunta:
 
-Quais o total de lojas do shopping?
+Qual o total de lojas do shopping?
 
 ![Exemplo Query](https://github.com/<seu_usuario>/<seu_repo>/blob/main/images/Exemplo_query.png.png?raw=true)

@@ -1,10 +1,10 @@
 # pip install langchain streamlit openai snowflake-connector-python
 
-#PIL
+# PIL
 import os
 from pathlib import Path
 from PIL import Image
-from app_secrets import OPENAI_API_KEY
+# Removida a importação de app_secrets
 from langchain.prompts import load_prompt
 from sql_execution import execute_sf_query
 import streamlit as st
@@ -12,10 +12,17 @@ import streamlit as st
 from langchain.llms import OpenAI
 from langchain.chains import LLMChain
 
+from dotenv import load_dotenv
+load_dotenv()  # Carrega as variáveis de ambiente do arquivo .env
 
-# Configurar a chave da API OpenAI
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-root_path = [p for p in Path(__file__).parents if p.parts[-1]== "assistente-ia-sql"][0]
+
+# Configurar a chave da API OpenAI a partir de variáveis de ambiente
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+if not OPENAI_API_KEY:
+    raise ValueError("A chave da API OpenAI não foi configurada.")
+
+# Define o caminho raiz baseado na localização do arquivo
+root_path = [p for p in Path(__file__).parents if p.parts[-1] == "assistente-ia-sql"][0]
 
 # Interface de usuário
 st.title("Assistente de SQL IA")
