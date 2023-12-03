@@ -1,57 +1,30 @@
-# Assistente SQL com IA
-Este projeto consiste em um assistente de SQL com IA para consultas em banco de dados Snowflake. O assistente recebe uma pergunta em linguagem natural do usuário e gera a consulta SQL correspondente.
+Configuração do Ambiente
+Instalar Dependências:
 
-## Funcionamento
-O fluxo do assistente é:
+Execute pip install -r requirements.txt para instalar todas as dependências necessárias.
+Variáveis de Ambiente:
 
-1. O usuário insere uma pergunta em linguagem natural na interface
-2. A pergunta é passada para a cadeia de geração de linguagem LangChain
-3. LangChain usa o modelo de linguagem GPT-3 da Anthropic para gerar a query SQL correspondente
-4. A consulta SQL é executada no Snowflake usando a biblioteca Python snowflake-connector
-5. O resultado da consulta é exibido na interface para o usuário
+Defina as seguintes variáveis de ambiente no arquivo .env:
+OPENAI_API_KEY: Sua chave de API para o OpenAI.
+GOOGLE_APPLICATION_CREDENTIALS: Caminho para sua chave de API do Google Cloud (para TTS).
+Variáveis para a conexão Snowflake (SF_USER, SF_PASSWORD, etc.).
+Uso do Aplicativo
+Executar o demo.py:
 
-![Exemplo](https://github.com/<seu_usuario>/<seu_repo>/blob/main/images/Exemplo.png.png?raw=true)
+Inicie o aplicativo com streamlit run demo.py.
+Acesse a interface do usuário via navegador conforme indicado pelo Streamlit.
+Interagir com a Aplicação:
 
-A interface foi construída com Streamlit e o aplicativo roda localmente.
+Digite sua consulta na caixa de texto.
+Visualize o resultado da consulta SQL, o texto da consulta e o diagrama ERD.
+Utilize a funcionalidade de síntese de voz, se necessário.
+Configuração da Síntese de Voz
+Google Text-to-Speech:
+Siga as instruções da Google Cloud para configurar a API Text-to-Speech.
+Certifique-se de que a chave da API esteja corretamente configurada no .env.
+Manutenção e Suporte
+Para problemas, dúvidas ou contribuições, por favor, abra uma issue no repositório do GitHub ou entre em contato com os mantenedores do projeto.
 
-**Tecnologias**
-
-As principais tecnologias usadas no projeto:
-
-* LangChain para geração de linguagem
-* GPT-3 da Anthropic como LLM
-* Snowflake para banco de dados em nuvem
-* Streamlit para interface web
-
-**Estrutura de Arquivos** 
-
-* images/: contém diagrama ERD
-* prompts/: contém o template de prompt usado no LangChain
-* pycache/: cache Python
-* README.md: este arquivo
-* demo.py: script principal com interface Streamlit
-* requirements.txt: dependencies do projeto
-* sql_execution.py: funções para executar queries SQL no Snowflake
-
-**Como Usar**
-
-Pré-requisitos
-
-* Python 3.7+
-* Conta na OpenAI
-* Conta Snowflake
-
-**Passos**
-
-1. Clone este repositório
-2. Instale as dependências com pip install -r requirements.txt
-3. Configure as credenciais Snowflake e chave API OpenAI em app_secrets.py
-4. Execute streamlit run demo.py
-5. Insira uma pergunta na caixa de texto e clique Enter
-
-Exemplo
-
-Pergunta:
 
 Qual o total de lojas do shopping?
 
