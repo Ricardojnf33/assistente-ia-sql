@@ -1,6 +1,7 @@
 streamlit
-langchain
 openai
+google-cloud-texttospeech
 snowflake-connector-python
-Pillow
+pydub
+requests
 pandas
